@@ -48,7 +48,7 @@ BSL5_ACK = '\x00'
 
 
 def crc_update(crc, byte):
-    x = ((crc >> 8) ^ ord(byte)) & 0xff
+    x = ((crc >> 8) ^ byte) & 0xff
     x ^= x >> 4
     return ((crc << 8) ^ (x << 12) ^ (x << 5) ^ x) & 0xffff
 
@@ -127,7 +127,7 @@ class SerialBSL5(bsl5.BSL5):
         +-----+----+----+-----------+----+----+
         """
         # first synchronize with slave
-        self.logger.debug('Command 0x%02x %s' % (cmd, message.encode('hex')))
+        self.logger.debug('Command 0x%02x %s' % (cmd, message))
         # prepare command with checksum
         txdata = struct.pack('<BHB', 0x80, 1 + len(message), cmd) + message
         txdata += struct.pack('<H', functools.reduce(crc_update, txdata, 0xffff))   # append checksum

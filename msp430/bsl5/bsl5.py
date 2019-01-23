@@ -72,7 +72,7 @@ class BSL5(object):
             raise BSL5Error('unknown response 0x%02x' % ord(data[0]))
 
     def BSL_RX_DATA_BLOCK(self, address, data):
-        packet = three_bytes(address) + data
+        packet = three_bytes(address).encode() + data
         answer = self.bsl(BSL_RX_DATA_BLOCK, packet, expect=0)
         self.check_answer(answer)
 
